@@ -3,10 +3,13 @@
         "browser": true,
         "es2021": true
     },
+    "parser": "vue-eslint-parser", 
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
-        "plugin:vue/vue3-essential"
+        "plugin:vue/vue3-essential",
+        "plugin:prettier/recommended",
+        "airbnb-base"
     ],
     "parserOptions": {
         "ecmaVersion": "latest",
@@ -15,8 +18,13 @@
     },
     "plugins": [
         "@typescript-eslint",
-        "vue"
+        "vue",
+        "prettier"
     ],
     "rules": {
+        "prettier/prettier": "error"
     }
+    // "globals": {
+    //     "defineProps": "readonly"
+    // }
 }
