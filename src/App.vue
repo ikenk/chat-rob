@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 // 打印环境变量
 ;(function printEnvVar(){
@@ -35,13 +35,29 @@
 //   console.log(name);
 // })
 
+onMounted(() => {
+  const context = document.getElementById('c')
+  const ctx = context.getContext('2d')
 
+  const img = new Image() // 创建图片对象
+  img.src = '../public/vite.svg' // 加载本地图片
+
+  // 图片加载完成后在执行其他操作
+  img.onload = () => {
+    // 渲染图片
+    ctx.drawImage(img, 0, 0)
+    // 获取图片信息
+    const imageData = ctx.getImageData(0, 0, img.width, img.height)
+    console.log(imageData)
+  }
+})
 </script>
 
 <template>
   <div>
     <el-button type="primary">switch locale</el-button>
-  </div>                                                                            
+  </div>
+  <canvas id="c" width="400" height="400" style="border: 1px solid #ccc;"></canvas>                                                                       
 </template>
 
 <style scoped>
