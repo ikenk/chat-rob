@@ -35,21 +35,18 @@ import { computed, onMounted, ref } from 'vue';
 //   console.log(name);
 // })
 
-onMounted(() => {
-  const context = document.getElementById('c')
-  const ctx = context.getContext('2d')
+const canvas = ref<HTMLCanvasElement>()
 
-  const img = new Image() // 创建图片对象
-  img.src = '../public/vite.svg' // 加载本地图片
-
-  // 图片加载完成后在执行其他操作
-  img.onload = () => {
-    // 渲染图片
-    ctx.drawImage(img, 0, 0)
-    // 获取图片信息
-    const imageData = ctx.getImageData(0, 0, img.width, img.height)
-    console.log(imageData)
-  }
+onMounted(()=>{
+  const ctx= canvas.value!.getContext('2d');
+  canvas.value!.width = 200
+  canvas.value!.height = 200
+  ctx?.beginPath()
+  ctx?.moveTo(20,20)
+  ctx?.lineTo(100, 20)
+  ctx!.strokeStyle = 'red'
+  ctx!.lineWidth = 6
+  ctx?.stroke()
 })
 </script>
 
@@ -57,7 +54,7 @@ onMounted(() => {
   <div>
     <el-button type="primary">switch locale</el-button>
   </div>
-  <canvas id="c" width="400" height="400" style="border: 1px solid #ccc;"></canvas>                                                                       
+  <canvas ref="canvas" id="c" width="400" height="400" style="border: 1px solid #ccc;"></canvas>                                                                       
 </template>
 
 <style scoped>
