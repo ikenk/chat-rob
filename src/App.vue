@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
-
 // 打印环境变量
 ;(function printEnvVar(){
   // base api
@@ -30,31 +28,11 @@ import { computed, onMounted, ref } from 'vue';
   window.open(encodedUri);
 })
 
-// const name = ref<String>('button')
-// onMounted(()=>{
-//   console.log(name);
-// })
 
-const canvas = ref<HTMLCanvasElement>()
-
-onMounted(()=>{
-  const ctx= canvas.value!.getContext('2d');
-  canvas.value!.width = 200
-  canvas.value!.height = 200
-  ctx?.beginPath()
-  ctx?.moveTo(20,20)
-  ctx?.lineTo(100, 20)
-  ctx!.strokeStyle = 'red'
-  ctx!.lineWidth = 6
-  ctx?.stroke()
-})
 </script>
 
 <template>
-  <div>
-    <el-button type="primary">switch locale</el-button>
-  </div>
-  <canvas ref="canvas" id="c" width="400" height="400" style="border: 1px solid #ccc;"></canvas>                                                                       
+  <router-view></router-view>
 </template>
 
 <style scoped>
