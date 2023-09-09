@@ -4,7 +4,7 @@
   // base api
   console.log(import.meta.env.VITE_APP_BASE_API);
   // import.meta 信息
-  console.log(import.meta)
+  console.log(import.meta.env.VITE_APP_TITLE)
 })
 // 导出csv后缀的文件。类似于Excel
 ;(function exportCSV(){
@@ -27,8 +27,6 @@
   var encodedUri = encodeURI(csvContent);
   window.open(encodedUri);
 })
-
-
 </script>
 
 <template>

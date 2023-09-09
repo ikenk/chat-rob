@@ -4,7 +4,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 const constRoutes = [
   {
     path:'/',
-    redirect:'/home'
+    redirect:'/chat'
   },
   //聊天界面路由
   {
@@ -22,7 +22,7 @@ const constRoutes = [
   },
   //404路由
   {
-    path:'/notfound',
+    path:'/404',
     name:'notfound',
     component:()=>import('@/views/notfound/NotFound.vue'),
     meta:{}
