@@ -43,7 +43,7 @@ import '@/icons/js/chat-topbutton.js'
   }
 
   .menu{
-    padding-left:20px ;
+    padding-left:30px ;
     .menuicon{
       box-sizing: border-box;
       width: 40px;

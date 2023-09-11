@@ -2,7 +2,9 @@
 import ChatLog from '@/views/chat/chatlog/index.vue'
 import TopButton from '@/views/chat/topbutton/index.vue'
 import SetAccount from '@/views/chat/setaccount/index.vue'
+import ChatBox from '@/views/chat/chatbox/index.vue'
 import '@/icons/js/chat-topbutton.js'
+
 </script>
 
 <template>
@@ -26,27 +28,63 @@ import '@/icons/js/chat-topbutton.js'
       <set-account class="account"></set-account>
     </div>
     <div class="chatbox">
-      <nav class="nav">
+      <chat-box></chat-box>
+      <!-- <nav class="nav">
         <icon-svg icon-class="toggle-right" class="icon"></icon-svg>
         <icon-svg icon-class="add" class="icon"></icon-svg>
       </nav>
+      <div class="sendmsg">
+        <el-input
+          v-model="sendmsg"
+          maxlength="1000"
+          placeholder="你想说点什么..."
+          show-word-limit
+          type="textarea"
+          resize="none"
+          :autosize="{ minRows: 1, maxRows: 9 }"
+        />
+      </div> -->
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+//发送信息窗口的位置
+@mixin msgboxPosition{
+  position: absolute;
+  bottom: 30px;
+}
 
+//侧边栏整体样式
+@mixin asideStyle{
+  position: relative;
+  box-sizing: border-box;
+  width: 260px;
+  height: 100vh;
+  padding: 10px;
+  border-radius: 10px 0 0 10px;
+  @include backgroundColor;
+}
+
+//对话部分整体样式
+@mixin chatboxStyle{
+  position: relative;
+  box-sizing: border-box;
+  flex: 1 0 0%;
+  padding: 10px;
+  background-color: yellow;
+  height: 100vh;
+}
+
+
+// 大屏布局
 @media screen and (min-width: 768px) {
   .container{
     display: flex;
+
+    //侧边栏
     .aside{
-      position: relative;
-      box-sizing: border-box;
-      width: 260px;
-      height: 100vh;
-      padding: 10px;
-      border-radius: 10px 0 0 10px;
-      @include backgroundColor;
+      @include asideStyle;
 
       .account{
         position: absolute;
@@ -55,55 +93,59 @@ import '@/icons/js/chat-topbutton.js'
       }
     }
 
-
+    // 对话框
     .chatbox{
-      box-sizing: border-box;
-      flex: 1 0 0%;
-      padding: 10px;
+      @include chatboxStyle;
       border-radius:  0 10px 10px 0;
-      background-color: yellow;
       
-      .nav{
+      // 大屏时顶部导航栏不出现
+      &:deep(.nav){
         display: none;
+      }
+
+      // 底部输入框
+      &:deep(.msgbox){
+        @include msgboxPosition;
       }
     }
   }
 }
 
-
+//小屏布局
 @media screen and (max-width: 767px) {
   .container{
     display: flex;
 
+    //侧边栏
     .aside{
       display: none;
-      box-sizing: border-box;
-      width: 260px;
-      height: 100vh;
-      padding: 10px;
-      border-radius: 10px 0 0 10px;
-      background-color: rgba(32,33,35,$bg-opacity);
+      @include asideStyle;
     }
 
-
+    //对话框
     .chatbox{
-      box-sizing: border-box;
-      flex: 1 0 0%;
+      @include chatboxStyle;
       border-radius:  10px 10px 10px 10px;
-      background-color: yellow;
-      height: 100vh;
-      .nav{
+
+      // 小屏时顶部导航栏出现
+      &:deep(.nav){
         box-sizing: border-box;
         padding: 10px 30px;
         display: flex;
         height: 50px;
-        background-color: rgba(32,33,35,$bg-opacity);
+        @include backgroundColor;
         justify-content: space-between;
+        border-radius: 5px;
         .icon{
           font-size: 25px;
           line-height: 30px;
           color:white;
         }
+      }
+
+      // 底部输入框
+      &:deep(.msgbox){
+        @include msgboxPosition;
       }
     }
   }
