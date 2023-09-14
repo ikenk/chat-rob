@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 //静态路由
-const constRoutes = [
+const constRoutes:RouteRecordRaw[] = [
   {
     path:'/',
     redirect:'/chat'

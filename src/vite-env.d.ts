@@ -7,3 +7,7 @@ interface ImportMetaEnv{
   readonly VITE_APP_TITLE:String
   readonly VITE_APP_BASE_API:String
 }
+
+interface ImportMeta{
+  readonly evn: ImportMetaEnv
+}

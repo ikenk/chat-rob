@@ -13,6 +13,6 @@ declare module 'vue' {
     IconSvg: typeof import('./src/components/iconsvg/IconSvg.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    SetAccount:typeof import('./src/views/chat/setaccount/SetAccount.vue')['default']
+    SetAccount: typeof import('./src/views/chat/setaccount/SetAccount.vue')['default']
   }
 }
