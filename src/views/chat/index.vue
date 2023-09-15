@@ -11,16 +11,6 @@ import '@/icons/js/chat-topbutton.js'
   <div class="container">
     <div class="aside">
       <!-- 顶部添加聊天按钮和菜单按钮 -->
-      <!-- <el-row class="topbutton">
-        <el-col :span="18">
-          <button class="newchat">+ newchat</button>
-        </el-col>
-        <el-col :span="6">
-          <button class="menu">
-            <icon-svg iconClass="toggle-left"></icon-svg>
-          </button>
-        </el-col>
-      </el-row> -->
       <top-button class="topbtn"></top-button>
       <!-- 聊天历史记录 -->
       <chat-log class="content"></chat-log>
@@ -29,21 +19,6 @@ import '@/icons/js/chat-topbutton.js'
     </div>
     <div class="chatbox">
       <chat-box></chat-box>
-      <!-- <nav class="nav">
-        <icon-svg icon-class="toggle-right" class="icon"></icon-svg>
-        <icon-svg icon-class="add" class="icon"></icon-svg>
-      </nav>
-      <div class="sendmsg">
-        <el-input
-          v-model="sendmsg"
-          maxlength="1000"
-          placeholder="你想说点什么..."
-          show-word-limit
-          type="textarea"
-          resize="none"
-          :autosize="{ minRows: 1, maxRows: 9 }"
-        />
-      </div> -->
     </div>
   </div>
 </template>
@@ -53,6 +28,7 @@ import '@/icons/js/chat-topbutton.js'
 @mixin msgboxPosition{
   position: absolute;
   bottom: 30px;
+  left: 0;
 }
 
 //侧边栏整体样式
