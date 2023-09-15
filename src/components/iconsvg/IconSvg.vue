@@ -22,7 +22,7 @@ const icon = computed(()=>`#icon-${props.iconClass}`)
     width: 1em; 
     height: 1em;
     vertical-align: -0.15em;
-    fill: currentColor;
+    fill: currentColor; //封装后的svg组件无法继承颜色
     overflow: hidden;
 }
 </style>

@@ -10,21 +10,21 @@ const constRoutes:RouteRecordRaw[] = [
   {
     path:'/chat',
     name:'chat',
-    component:()=>import('@/views/chat/ChatPage.vue'),
+    component:()=>import('@/views/chat/index.vue'),
     meta:{}
   },
   //登陆界面路由
   {
     path:'/login',
     name:'login',
-    component:()=>import('@/views/login/LoginPage.vue'),
+    component:()=>import('@/views/login/index.vue'),
     meta:{}
   },
   //404路由
   {
-    path:'/404',
+    path:'/:pathMatch(.*)',
     name:'notfound',
-    component:()=>import('@/views/notfound/NotFound.vue'),
+    component:()=>import('@/views/notfound/index.vue'),
     meta:{}
   }
 ]
@@ -33,5 +33,8 @@ const router = createRouter({
   history: createWebHistory(),
   routes: constRoutes,
 })
+
+//路由白名单 备用
+const WHITE_LIST = ['/login', '/404']
 
 export default router

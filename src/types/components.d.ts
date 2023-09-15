@@ -9,10 +9,10 @@ declare module 'vue' {
   export interface GlobalComponents {
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCol: typeof import('element-plus/es')['ElCol']
+    ElInput: typeof import('element-plus/es')['ElInput']
     ElRow: typeof import('element-plus/es')['ElRow']
-    IconSvg: typeof import('./src/components/iconsvg/IconSvg.vue')['default']
+    IconSvg: typeof import('./../components/iconsvg/IconSvg.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    SetAccount: typeof import('./src/views/chat/setaccount/SetAccount.vue')['default']
   }
 }
