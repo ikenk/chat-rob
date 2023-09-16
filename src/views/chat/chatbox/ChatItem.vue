@@ -1,6 +1,6 @@
 <script setup lang="ts">
 //需要想item内传入用户输入的消息和ChatGPT返回的消息
-const props = defineProps<{
+defineProps<{
   role:string
   message:string
 }>()

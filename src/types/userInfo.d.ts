@@ -1,4 +1,10 @@
 type LoginInfo = {
-  mobile:string,
+  account:string,
   password:string
+}
+
+type RegisterInfo = {
+  account:string
+  password:string
+  checkpass:string
 }

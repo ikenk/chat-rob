@@ -1,15 +1,22 @@
 <script setup lang="ts">
-import IconSvg from '@/components/iconsvg/IconSvg.vue'
-import '@/icons/js/chat-topbutton.js'
+const sendNewMsg = ()=>{
+  console.log(123);
+  
+}
+
+const toggleMenu = ()=>{
+  console.log(345);
+  
+}
 </script>
 
 <template>
   <el-row class="topbutton">
     <el-col :span="18" class="newchat">
-      <button class="newchatbtn">+ New chat</button>
+      <button class="newchatbtn" @click="sendNewMsg">+ New chat</button>
     </el-col>
     <el-col :span="6" class="menu">
-      <icon-svg iconClass="toggle-left" class="menuicon"></icon-svg>
+      <icon-svg iconClass="toggle-left" class="menuicon" @click="toggleMenu"></icon-svg>
     </el-col>
   </el-row>
 </template>
@@ -27,38 +34,42 @@ import '@/icons/js/chat-topbutton.js'
       padding: 0 10px;
       width: 100%;
       height: 40px;
-      font-size: 16px;
+      font-size: 14px;
       text-align: start;
       border-radius: 5px;
       outline: none;
-      border: 1px solid #fff;
+      border: 1px solid $color-border-aside;
       @include backgroundColor;
-      color: #fff;
+      color: $color-font-aside;
 
       &:hover{
         @include hoverBackgroundColor;
         outline: none;
+        cursor: pointer;
       }
     }
   }
 
   .menu{
-    padding-left:30px ;
+    padding-left:20px ;
     .menuicon{
       box-sizing: border-box;
       width: 40px;
       height:40px;
-      padding-bottom: 5px;
-      font-size: 30px;
-      line-height: 35px;
-      color: white;
-
+      padding: 0 10px;
+      font-size: 16px;
+      line-height: 38px;
+      color: rgba(255,255,255,0.6);
+      border: 1px solid $color-border-aside;
+      border-radius: 6px;
       &:deep(.icon){
         margin-bottom: 0px;
       }
 
       &:hover{
         cursor: pointer;
+        @include hoverBackgroundColor;
+        outline: none;
       }
   }
   }

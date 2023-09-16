@@ -3,7 +3,7 @@ import ChatLog from '@/views/chat/chatlog/index.vue'
 import TopButton from '@/views/chat/topbutton/index.vue'
 import SetAccount from '@/views/chat/setaccount/index.vue'
 import ChatBox from '@/views/chat/chatbox/index.vue'
-import '@/icons/js/chat-topbutton.js'
+import '@/icons/js/ChatPageIcon.js'
 
 </script>
 
@@ -13,7 +13,7 @@ import '@/icons/js/chat-topbutton.js'
       <!-- 顶部添加聊天按钮和菜单按钮 -->
       <top-button class="topbtn"></top-button>
       <!-- 聊天历史记录 -->
-      <chat-log class="content"></chat-log>
+      <chat-log class="chatlog"></chat-log>
       <!-- 底部设置按钮以及账户按钮 -->
       <set-account class="account"></set-account>
     </div>
@@ -33,7 +33,8 @@ import '@/icons/js/chat-topbutton.js'
 
 //侧边栏整体样式
 @mixin asideStyle{
-  position: relative;
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
   width: 260px;
   height: 100vh;
@@ -48,7 +49,7 @@ import '@/icons/js/chat-topbutton.js'
   box-sizing: border-box;
   flex: 1 0 0%;
   padding: 10px;
-  background-color: yellow;
+  // background-color: yellow;
   height: 100vh;
 }
 
@@ -57,15 +58,18 @@ import '@/icons/js/chat-topbutton.js'
 @media screen and (min-width: 768px) {
   .container{
     display: flex;
-
     //侧边栏
     .aside{
       @include asideStyle;
 
+      .chatlog{
+        flex: 1;
+        height: 20vh;
+      }
+
       .account{
-        position: absolute;
         width: 240px;
-        bottom: 5px;
+        height: 64px
       }
     }
 
@@ -94,8 +98,8 @@ import '@/icons/js/chat-topbutton.js'
 
     //侧边栏
     .aside{
-      display: none;
       @include asideStyle;
+      display: none;
     }
 
     //对话框
@@ -126,4 +130,4 @@ import '@/icons/js/chat-topbutton.js'
     }
   }
 }
-</style>
+</style>@/icons/js/chatPageIcon.js

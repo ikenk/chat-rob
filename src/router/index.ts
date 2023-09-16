@@ -1,14 +1,15 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
+
 
 //静态路由
-const constRoutes:RouteRecordRaw[] = [
+const constRoutes= [
   {
     path:'/',
-    redirect:'/chat'
+    redirect:'/chat/model=3-5-turbo'
   },
   //聊天界面路由
   {
-    path:'/chat',
+    path:'/chat/:params',
     name:'chat',
     component:()=>import('@/views/chat/index.vue'),
     meta:{}
@@ -35,6 +36,6 @@ const router = createRouter({
 })
 
 //路由白名单 备用
-const WHITE_LIST = ['/login', '/404']
+// const WHITE_LIST = ['/login', '/404']
 
 export default router

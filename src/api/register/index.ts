@@ -6,13 +6,14 @@ import request from '@/utils/http'
  * @param {*} data { mobile,password}
  * @return {*} promise
  */
-export function login({ account, password }:LoginInfo) {
+export function login({ account, password,checkpass }:RegisterInfo) {
   return request({
-    url: '/api/login',
+    url: '/api/register',
     method: 'POST',
     data: {
       account,
-      password
+      password,
+      checkpass
     }
   })
 }
