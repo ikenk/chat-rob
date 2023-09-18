@@ -1,5 +1,11 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules } from 'element-plus'
+import {getLogin} from '@/api/login/index.ts'
+import {getRegister} from '@/api/register/index.ts'
+import { ElMessage } from 'element-plus'
+
+const router = useRouter()
+
 //切换登录注册表格
 const isShow = ref<string>('register')
 
@@ -23,8 +29,8 @@ const validateAccount = (rule: any, value: any, callback: any) => {
   //   callback()
   // }
   //4-16位字母、数字、下划线、减号 账户名校验
-  if(!/^[\w-]{4,16}$/.test(value)){
-    return callback(new Error('请输入4-16位字母、数字、下划线、减号组成的账户名'))
+  if(!/^[\w-]{6,16}$/.test(value)){
+    return callback(new Error('请输入6-16位字母、数字、下划线、减号组成的账户名'))
   }else{
     callback()
   }
@@ -58,34 +64,6 @@ const validatePassAgain = (rule: any, value: any, callback: any) => {
 }
 
 
-/**
- * 登录表格数据及校验
- */
-//登录表格对象
-const loginFormRef = ref<FormInstance>()
-//登录表格数据
-const loginForm = ref<LoginInfo>({
-  account:'',
-  password:''
-})
-//登录表格校验
-const loginFormRules = ref<FormRules<typeof loginForm>>({
-  account: [{ validator:validateAccount , trigger: 'blur' }],
-  password: [{ validator: validatePassword, trigger: 'blur' }],
-})
-//登录表格提交
-const submitLoginForm = (formEl: FormInstance | undefined) => {
-  if (!formEl) return
-  formEl.validate((valid) => {
-    if (valid) {
-      console.log('submit!')
-      formEl.resetFields()
-    } else {
-      console.log('error submit!')
-      return false
-    }
-  })
-}
 
 
 /**
@@ -108,10 +86,45 @@ const registerRules = ref<FormRules<typeof registerForm>>({
 //注册表格提交
 const submitRegisterForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
-  formEl.validate((valid) => {
+  formEl.validate(async (valid) => {
     if (valid) {
-      console.log('submit!')
+      const res = await getRegister(registerForm.value)
+      ElMessage.success(res.message)
       formEl.resetFields()
+      isShow.value = 'login'
+    } else {
+      console.log('error submit!')
+      return false
+    }
+  })
+}
+
+
+
+/**
+ * 登录表格数据及校验
+ */
+//登录表格对象
+const loginFormRef = ref<FormInstance>()
+//登录表格数据
+const loginForm = ref<LoginInfo>({
+  account:'',
+  password:''
+})
+//登录表格校验
+const loginFormRules = ref<FormRules<typeof loginForm>>({
+  account: [{ validator:validateAccount , trigger: 'blur' }],
+  password: [{ validator: validatePassword, trigger: 'blur' }],
+})
+//登录表格提交
+const submitLoginForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  formEl.validate(async (valid) => {
+    if (valid) {
+      const res = await getLogin(loginForm.value)
+      ElMessage.success(res.message)
+      formEl.resetFields()
+      router.replace('/')
     } else {
       console.log('error submit!')
       return false

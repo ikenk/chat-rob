@@ -16,7 +16,7 @@ export default defineConfig({
   resolve:{
     // 配置路径别名
     alias:{
-      //两种写法都行，是一样的
+      //三种写法都行，是一样的
       '@':path.resolve(__dirname,'src')
       // '@/':`${path.resolve(__dirname,'src')}/`
       // '~/': `${path.resolve(__dirname, 'src')}/`,
@@ -55,10 +55,10 @@ export default defineConfig({
     ElementPlus({
       // options
       // useSource: true,
-    }),
+    })
   ],
   //开发服务器
   server:{
-    // port:3000
+    // port:300
   }
 })

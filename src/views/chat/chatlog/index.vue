@@ -1,5 +1,4 @@
 <script setup lang="ts">
-const router = useRouter()
 const chatHistory = [
   {
     date:'2021-05-01',

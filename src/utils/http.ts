@@ -1,3 +1,4 @@
+import { useUserInfoStore } from '@/stores/userInfo'
 import axios ,{ AxiosInstance, AxiosRequestConfig, AxiosResponse, Method }from 'axios'
 import { ElMessage } from 'element-plus'
 
@@ -16,10 +17,11 @@ const instance:AxiosInstance = axios.create({
 // 请求拦截器
 instance.interceptors.request.use(
   config => {
-    // const token = '写上获取token的函数'
-    // if (token) {
-    //   config.headers.Authorization = token
-    // }
+    const userInfoStore = useUserInfoStore()
+    const token = userInfoStore.getToken('userToken')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
     return config
   },
   error => {
@@ -44,7 +46,9 @@ instance.interceptors.response.use(
       // store.commit('user/clearUserInfo')
     }
     // 错误统一处理
-    ElMessage.error(error.message)
+    ElMessage.error(error.response.data.message)
+    console.log(error);
+    
     return Promise.reject(error)
   }
 )
@@ -55,7 +59,7 @@ export default instance
 type Data<T> = {
   code:number
   message:string
-  data:T
+  data?:T
 }
 
 

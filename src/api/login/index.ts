@@ -1,4 +1,4 @@
-import request from '@/utils/http'
+import {request} from '@/utils/http'
 
 // 登录函数
 /**
@@ -6,13 +6,6 @@ import request from '@/utils/http'
  * @param {*} data { mobile,password}
  * @return {*} promise
  */
-export function login({ account, password }:LoginInfo) {
-  return request({
-    url: '/api/login',
-    method: 'POST',
-    data: {
-      account,
-      password
-    }
-  })
+export function getLogin(data:LoginInfo) {
+  return request<object>( '/api/login','POST',data)
 }

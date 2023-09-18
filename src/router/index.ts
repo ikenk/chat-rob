@@ -35,7 +35,7 @@ const router = createRouter({
   routes: constRoutes,
 })
 
-//路由白名单 备用
-// const WHITE_LIST = ['/login', '/404']
+// 路由白名单
+const WHITE_LIST = ['/login', '/404']
 
 export default router
