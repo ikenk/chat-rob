@@ -5,11 +5,11 @@
     },
     "parser": "vue-eslint-parser", 
     "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:vue/vue3-essential",
-        "plugin:prettier/recommended",
-        "airbnb-base"
+        // "eslint:recommended",
+        // "plugin:@typescript-eslint/recommended",
+        // "plugin:vue/vue3-essential",
+        "plugin:prettier/recommended"
+        // "airbnb-base"
     ],
     "parserOptions": {
         "ecmaVersion": "latest",

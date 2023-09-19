@@ -36,6 +36,27 @@ const router = createRouter({
 })
 
 // 路由白名单
-const WHITE_LIST = ['/login', '/404']
+// const WHITE_LIST = ['/login', '/404']
+
+// router.beforeEach((to, from) => {
+//   // 返回 false 以取消导航
+//   return false
+// })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 export default router
