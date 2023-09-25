@@ -1,12 +1,13 @@
 import { useUserInfoStore } from '@/stores/userInfo'
-import axios ,{ AxiosInstance, AxiosRequestConfig, AxiosResponse, Method }from 'axios'
+import axios ,{ AxiosInstance, Method }from 'axios'
 import { ElMessage } from 'element-plus'
+import router from '@/router/index.ts'
 
 //下面两行代码需放入方程中或setup函数中使用，不要放在全局使用
-//引入router
+// //引入router
 // const router = useRouter()
-//引入用户数据仓库
-// const store = useUserInfo()
+// //引入用户数据仓库
+// const store = useUserInfoStore()
 
 
 const instance:AxiosInstance = axios.create({
@@ -17,8 +18,8 @@ const instance:AxiosInstance = axios.create({
 // 请求拦截器
 instance.interceptors.request.use(
   config => {
-    const userInfoStore = useUserInfoStore()
-    const token = userInfoStore.getToken('userToken')
+    const store = useUserInfoStore()
+    const token = store.getToken('user-token')
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
@@ -35,15 +36,15 @@ instance.interceptors.response.use(
     return response.data
   },
   error => {
-    //引入路由
-    const router = useRouter()
+    //引入用户数据仓库
+    const store = useUserInfoStore()
     // Token 401处理
     // console.dir(error.response.status.message)
     if (error.response.status === 401) {
       // 1. 跳转到登录
-      router.push('/login')
+      router.push({name:'login'})
       // 2. 清空用户数据
-      // store.commit('user/clearUserInfo')
+      store.delToken('user-token')
     }
     // 错误统一处理
     ElMessage.error(error.response.data.message)

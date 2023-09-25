@@ -3,11 +3,13 @@ import type { FormInstance, FormRules } from "element-plus";
 import { ElMessage } from "element-plus";
 import { getLogin } from "@/api/login/index.ts";
 import { getRegister } from "@/api/register/index.ts";
+import {useUserInfoStore}from '@/stores/userInfo'
 
 const router = useRouter();
+const store = useUserInfoStore();
 
 // 切换登录注册表格
-const isShow = ref<string>("register");
+const isShow = ref<string>("login");
 
 /**
  * 账号、密码校验规则
@@ -120,6 +122,7 @@ const submitLoginForm = (formEl: FormInstance | undefined) => {
     if (valid) {
       const res = await getLogin(loginForm.value);
       ElMessage.success(res.message);
+      store.setToken('user-token',res.data!.token);
       formEl.resetFields();
       router.replace("/");
     } else {

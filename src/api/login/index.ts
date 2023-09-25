@@ -7,5 +7,5 @@ import {request} from '@/utils/http'
  * @return {*} promise
  */
 export function getLogin(data:LoginInfo) {
-  return request<object>( '/api/login','POST',data)
+  return request<{token:string}>( '/api/login','POST',data)
 }

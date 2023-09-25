@@ -7,6 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    ChatLoading: typeof import('./../components/loading/ChatLoading.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCol: typeof import('element-plus/es')['ElCol']
     ElForm: typeof import('element-plus/es')['ElForm']
@@ -17,6 +18,7 @@ declare module 'vue' {
     ElScroller: typeof import('element-plus/es')['ElScroller']
     ElText: typeof import('element-plus/es')['ElText']
     IconSvg: typeof import('./../components/iconsvg/IconSvg.vue')['default']
+    Loading: typeof import('./../components/loading/loading.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

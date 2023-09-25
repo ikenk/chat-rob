@@ -8,3 +8,8 @@ type RegisterInfo = {
   password:string
   checkpass:string
 }
+
+type BaseInfo = {
+  account:string,
+  _id:string
+}

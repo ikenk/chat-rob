@@ -1,6 +1,17 @@
 <script setup lang="ts">
-const picUrl = ref('')
+import{useUserInfoStore}from '@/stores/userInfo'
+const router = useRouter()
+const store = useUserInfoStore()
+const props = defineProps<{
+  picUrl?:string,
+  accoutName:string,
+}>()
 
+
+const logoutAccount = ()=>{
+  store.delToken('user-token')
+  router.push({name:'login'})
+}
 </script>
 
 <template>
@@ -11,12 +22,13 @@ const picUrl = ref('')
         <span v-else>ik</span>
       </div>
       <div class="username">
-        <span>ikenak@gmail.com</span>
+        <span v-if="accoutName">{{ accoutName }}</span>
+        <span v-else>ikenak@gmail.com</span>
       </div>
     </div>
     <div class="button">
       <button class="setting">set</button>
-      <button class="logout">log</button>
+      <button class="logout" @click="logoutAccount">log</button>
     </div>
   </div>
 </template>

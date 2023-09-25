@@ -1,19 +1,19 @@
 <script setup lang="ts">
-const sendNewMsg = ()=>{
+const router = useRouter()
+const createNewMsg = ()=>{
   console.log(123);
-  
+  router.push('/')
 }
 
 const toggleMenu = ()=>{
   console.log(345);
-  
 }
 </script>
 
 <template>
   <el-row class="topbutton">
     <el-col :span="18" class="newchat">
-      <button class="newchatbtn" @click="sendNewMsg">+ New chat</button>
+      <button class="newchatbtn" @click="createNewMsg">+ New chat</button>
     </el-col>
     <el-col :span="6" class="menu">
       <icon-svg iconClass="toggle-left" class="menuicon" @click="toggleMenu"></icon-svg>

@@ -1,57 +1,24 @@
 <script setup lang="ts">
-const chatHistory = [
-  {
-    date:'2021-05-01',
-    datalogs:[
-      {
-        id:'1',
-        summary:'Welcome'
-      },
-      {
-        id:'2',
-        summary:'Welcome to the chat server.'
-      },
-      {
-        id:'3',
-        summary:'Welcome to the chat server with the following .'
-      }
-    ]
-  },
-  {
-    date:'2021-05-03',
-    datalogs:[
-      {
-        id:'4',
-        summary:'Welcome'
-      },
-      {
-        id:'5',
-        summary:'Welcome to the chat server.'
-      },
-      {
-        id:'6',
-        summary:'hi,how r u?'
-      }
-    ]
-  },
-  {
-    date:'2021-05-10',
-    datalogs:[
-      {
-        id:'7',
-        summary:'Welcome'
-      },
-      {
-        id:'8',
-        summary:'Welcome to the chat server.'
-      }
-    ]
-  }
-]
+const props = defineProps<{
+  chatHistory:ChatHistory //聊天记录
+}>()
 
+/**
+ * 编辑对话名称，删除对话
+ */
+//是否显示编辑和删除按钮
+const isShowEditIcon = ref<Boolean>(true)
+//编辑对话名称功能
+const editChatName = ()=>{}
+//删除对话功能
+const delChat = ()=>{}
+
+/**
+ * 选择对话功能
+ * @param logId 对话记录id
+ */
 const chooseDialog = (logId:string)=>{
   console.log(logId);
-  
 }
 </script>
 
@@ -60,11 +27,11 @@ const chooseDialog = (logId:string)=>{
     <el-scrollbar class="scroller">
       <div class="chatlogbox" v-for="logOnDate in chatHistory">
         <span class="timelog">{{logOnDate.date}}</span>
-        <div class="content" v-for="datalog in logOnDate.datalogs" :key="datalog.id" @click="chooseDialog(datalog.id)">
+        <div class="content" v-for="datalog in logOnDate.chatlogs" :key="datalog.id" @click="chooseDialog(datalog.id)">
           <icon-svg icon-class="shenqingapplications" class="text"></icon-svg>
           <el-text class="el-text" truncated>{{ datalog.summary }}</el-text>
-          <icon-svg icon-class="bianji" v-if="0" class="edit"></icon-svg>
-          <icon-svg icon-class="shanchu" v-if="0"  class="delete"></icon-svg>
+          <icon-svg icon-class="bianji" v-if="isShowEditIcon" class="edit" @click="editChatName"></icon-svg>
+          <icon-svg icon-class="shanchu" v-if="isShowEditIcon"  class="delete" @click="delChat"></icon-svg>
         </div>
       </div>
     </el-scrollbar>

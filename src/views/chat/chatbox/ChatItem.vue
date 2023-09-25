@@ -1,15 +1,15 @@
 <script setup lang="ts">
 //需要想item内传入用户输入的消息和ChatGPT返回的消息
 defineProps<{
-  role:string
-  message:string
-}>()
+  role: string;
+  message: string;
+}>();
 </script>
 
 <template>
-  <div class="container" :class="[role ==='user' ? 'user': 'assist' ]">
+  <div class="container" :class="[role === 'user' ? 'user' : 'assist']">
     <div class="img">
-      <img src="@/assets/assit.png" alt="">
+      <img src="@/assets/assit.png" alt="" />
     </div>
     <div class="content">
       {{ message }}
@@ -18,7 +18,7 @@ defineProps<{
 </template>
 
 <style lang="scss" scoped>
-.container{
+.container {
   box-sizing: border-box;
   width: 100%;
   // background-color: red;
@@ -26,24 +26,24 @@ defineProps<{
   padding: 10px 10%;
   margin: 10px 0;
   border-radius: 8px;
-  .img{
+  .img {
     box-sizing: border-box;
     width: 50px;
-    img{
+    img {
       width: 30px;
     }
   }
 
-  .content{
+  .content {
     flex: 1;
   }
 }
 
-.user{
+.user {
   background-color: white;
 }
 
-.assist{
-  background-color: rgba(0,0,0,0.1);
+.assist {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 </style>

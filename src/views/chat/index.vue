@@ -4,6 +4,36 @@ import TopButton from '@/views/chat/topbutton/index.vue'
 import SetAccount from '@/views/chat/setaccount/index.vue'
 import ChatBox from '@/views/chat/chatbox/index.vue'
 import '@/icons/js/ChatPageIcon.js'
+import {getUserInfo}from '@/api/user/index'
+
+const chatHistory = ref<ChatHistory>([
+  // {
+  //   date:'2021-05-01',
+  //   chatlogs:[
+  //     {
+  //       id:'1',
+  //       summary:'Welcome'
+  //     },
+  //     {
+  //       id:'2',
+  //       summary:'Welcome to the chat server.'
+  //     },
+  //     {
+  //       id:'3',
+  //       summary:'Welcome to the chat server with the following .'
+  //     }
+  //   ]
+  // }
+])
+
+//定义用户名变量
+const accountName = ref<string>('')
+//获取用户信息
+onMounted(async ()=>{
+  const res = await getUserInfo()
+  // console.log(res.data!.account);
+  accountName.value = res.data!.account
+})
 
 </script>
 
@@ -13,9 +43,9 @@ import '@/icons/js/ChatPageIcon.js'
       <!-- 顶部添加聊天按钮和菜单按钮 -->
       <top-button class="topbtn"></top-button>
       <!-- 聊天历史记录 -->
-      <chat-log class="chatlog"></chat-log>
+      <chat-log :chat-history="chatHistory" class="chatlog"></chat-log>
       <!-- 底部设置按钮以及账户按钮 -->
-      <set-account class="account"></set-account>
+      <set-account :accout-name="accountName" class="account"></set-account>
     </div>
     <div class="chatbox">
       <chat-box></chat-box>
