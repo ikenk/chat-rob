@@ -5,35 +5,65 @@ import SetAccount from '@/views/chat/setaccount/index.vue'
 import ChatBox from '@/views/chat/chatbox/index.vue'
 import '@/icons/js/ChatPageIcon.js'
 import {getUserInfo}from '@/api/user/index'
+import {getUserChatLog} from  "@/api/chat/index";
+const route = useRoute()
 
-const chatHistory = ref<ChatHistory>([
-  // {
-  //   date:'2021-05-01',
-  //   chatlogs:[
-  //     {
-  //       id:'1',
-  //       summary:'Welcome'
-  //     },
-  //     {
-  //       id:'2',
-  //       summary:'Welcome to the chat server.'
-  //     },
-  //     {
-  //       id:'3',
-  //       summary:'Welcome to the chat server with the following .'
-  //     }
-  //   ]
-  // }
-])
+
+const chatHistory = ref<ChatHistory>()
 
 //定义用户名变量
 const accountName = ref<string>('')
-//获取用户信息
+/**
+ * onMounted周期
+ * 获取用户信息
+ * 获取侧边栏的历史记录信息
+ */
+
+//获取聊天历史记录信息
+const getUserChatTitles = async (chatlogID:string)=>{
+  const resUserChatLog = await getUserChatLog(chatlogID)
+  resUserChatLog.data?.reverse().forEach((item)=>{item.chatlogs.reverse()})
+  // console.log(resUserChatLog.data);
+  chatHistory.value = resUserChatLog.data
+}
+
 onMounted(async ()=>{
-  const res = await getUserInfo()
+  //获取用户信息
+  const resUserInfo = await getUserInfo()
   // console.log(res.data!.account);
-  accountName.value = res.data!.account
+  accountName.value = resUserInfo.data!.account
+
+  //获取聊天历史记录信息
+  await getUserChatTitles(route.params.params)
 })
+
+//对话框中显示与chatlogID相应的对话内容
+const chatBoxRef = ref<InstanceType<typeof ChatBox>>()
+const chooseChat = (chatlogID:string)=>{
+  chatBoxRef.value?.getChatContent(chatlogID)
+}
+
+//删除某个对话之后，重新获取对话标题列表
+const deleteChat = async (chatlogID:string)=>{
+  console.log('deleteChat')
+  await getUserChatTitles(chatlogID)
+  clearChatBox()
+}
+
+const chatLogRef = ref<InstanceType<typeof ChatLog>>()
+
+//新建聊天或者删除某个聊天后，清除对话框里的聊天记录
+const clearChatBox = ()=>{
+  chatLogRef.value!.indexActive = ''
+  chatBoxRef.value!.diaList = []
+}
+
+//第一次发送消息后，需要刷新侧边栏，显示最新的Chat Titles
+const refreshChatTitles = async (chatlogID:string)=>{
+  await getUserChatTitles(chatlogID)
+  nextTick()
+  await getUserChatTitles(chatlogID)
+}
 
 </script>
 
@@ -41,14 +71,14 @@ onMounted(async ()=>{
   <div class="container">
     <div class="aside">
       <!-- 顶部添加聊天按钮和菜单按钮 -->
-      <top-button class="topbtn"></top-button>
+      <top-button class="topbtn" @clear-chat-box="clearChatBox"></top-button>
       <!-- 聊天历史记录 -->
-      <chat-log :chat-history="chatHistory" class="chatlog"></chat-log>
+      <chat-log ref="chatLogRef" :chat-history="chatHistory" class="chatlog" @chooseChat="chooseChat" @deleteChat="deleteChat"></chat-log>
       <!-- 底部设置按钮以及账户按钮 -->
       <set-account :accout-name="accountName" class="account"></set-account>
     </div>
     <div class="chatbox">
-      <chat-box></chat-box>
+      <chat-box ref="chatBoxRef" @refreshChatTitles="refreshChatTitles"></chat-box>
     </div>
   </div>
 </template>
@@ -160,4 +190,4 @@ onMounted(async ()=>{
     }
   }
 }
-</style>@/icons/js/chatPageIcon.js
+</style>

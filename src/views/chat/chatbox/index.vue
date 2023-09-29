@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import ChatItem from "./ChatItem.vue";
 import type { ElScrollbar, ElButton } from "element-plus";
-import { ElMessage } from 'element-plus'
+// import { ElMessage } from 'element-plus'
 import {fetchUtil} from "@/utils/fetch";
 import {getUUID,getUserChat} from  "@/api/chat/index";
 import { useUserInfoStore } from "@/stores/userInfo";
@@ -20,11 +20,37 @@ const userItem = ref<DialogMsg>();
 const scrollbarRef = ref<InstanceType<typeof ElScrollbar>>(); // el-scrollbar 组件对象
 const conversation = ref(); // conversation组件对象
 
+const emit = defineEmits(['refreshChatTitles'])
+
+//获取后台对话数据函数
+const getChatContent = async (chatlogID:string)=>{
+  const res = await getUserChat(chatlogID)
+  diaList.value = res.data!.chatlog
+  nextTick(()=>{
+    // console.log(scrollbarRef.value!.wrapRef!.scrollHeight);
+    // console.log(conversation.value.clientHeight );
+    // console.dir(scrollbarRef.value!.wrapRef!);
+    if(
+        scrollbarRef.value!.wrapRef!.scrollHeight >
+        conversation.value.clientHeight - +conversation.value.style['padding-bottom'].slice(0,2)
+      ){
+        scrollbarRef.value!.setScrollTop(
+            scrollbarRef.value!.wrapRef!.scrollHeight -
+              conversation.value.clientHeight + +conversation.value.style['padding-bottom'].slice(0,2),
+          );
+      }
+  })
+}
+
+defineExpose({
+  diaList,
+  getChatContent
+})
+
 //根据地址栏的id，向后台请求响应的对话数据
-onMounted(async()=>{
-  console.log(route.params.params);
-  const res = await getUserChat(route.params.params)
-  console.log(res);
+onMounted(async ()=>{
+  // console.log(route.params.params);
+  await getChatContent(route.params.params)
 })
 
 //中止控制器
@@ -38,7 +64,7 @@ const sendMsgToBack = async () => {
       content: msg.value,
     };
     userItem.value = {
-      id: Symbol(),
+      _id: Symbol(),
       role: "user",
       content: msg.value,
     };
@@ -68,26 +94,18 @@ const sendMsgToBack = async () => {
       });
     }
     msg.value = "";
-    // const res = await sendUserMsg(userMsg.value)
-    // const res = await fetch("http://192.168.3.59:7010/chat", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(userMsg.value),
-    // });
 
     //判断是否为新建对话，若是，则向后台获取uuid，并跳转到响应路由
-    const rep = await getUUID(`${route.fullPath}`)
+    const rep = await getUUID(`${route.params.params}`)
     // console.log(rep.data?.chatID);
     if(rep.data?.chatID){
       router.push('/chat/' + rep.data?.chatID)
+      emit('refreshChatTitles',rep.data?.chatID)
     }
-
 
     // 创建一个新的请求中止控制器
     controller = new AbortController()    
-    const res = await fetchUtil(`${route.fullPath}`,
+    const res = await fetchUtil(`/chat/conversation/${route.params.params}`,
       "POST", 
       {
         "Content-Type": "application/json",
@@ -97,21 +115,21 @@ const sendMsgToBack = async () => {
       controller.signal // 请求中止标识
     )
     assistItem.value = {
-      id: Symbol(),
+      _id: Symbol(),
       role: "assist",
       content: "",
     };
     //token过期的情况下需要跳转到登录页面，并且删除最近的一次对话
     if(res.status === 401){
-      ElMessage({
-        type: "error",
-        message:"身份验证过期"
-      })
+      // ElMessage({
+      //   type: "error",
+      //   message:"身份验证过期"
+      // })
       router.push({name:'login'})
       diaList.value.pop()
     }
     diaList.value.push(assistItem.value);
-    
+    // console.log(diaList.value);
     // 流式读取
     const reader = res.body?.getReader(); //读取器
     // console.log(reader);
@@ -143,8 +161,10 @@ const sendMsgToBack = async () => {
     }
     // console.log(diaList.value);
     isShowAbortBtn.value = false //隐藏中断按钮
-    console.log(res.status);
-    
+    // console.log(res.status);
+    if(rep.data?.chatID){
+      emit('refreshChatTitles',rep.data?.chatID)
+    }
   } else {
     return;
   }
@@ -180,7 +200,7 @@ const abortbtn = ref<InstanceType<typeof ElButton>>()
 const abortmsgBtn =async ()=>{
   // console.log('abort');
   controller.abort()
-  await fetchUtil("/chat",
+  await fetchUtil(`/chat/conversation/${route.params.params}`,
     "POST", 
     {
       "Content-Type": "application/json",
@@ -201,7 +221,7 @@ const abortmsgBtn =async ()=>{
     <el-scrollbar ref="scrollbarRef">
       <ChatItem
         v-for="item in diaList"
-        v-bind:key="item.id"
+        v-bind:key="item._id"
         :message="item.content"
         :role="item.role"
       ></ChatItem>

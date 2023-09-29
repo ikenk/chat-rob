@@ -1,8 +1,11 @@
 <script setup lang="ts">
 const router = useRouter()
+
+const emit = defineEmits(['clearChatBox'])
+
 const createNewMsg = ()=>{
-  console.log(123);
   router.push('/')
+  emit('clearChatBox')
 }
 
 const toggleMenu = ()=>{

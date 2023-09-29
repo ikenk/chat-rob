@@ -1,7 +1,7 @@
 //单个聊天记录
 type ChatLog = {
-  id:string,
-  summary:string
+  chatlogID:string,
+  chatTitle:string
 }
 
 //多个聊天记录的集合
