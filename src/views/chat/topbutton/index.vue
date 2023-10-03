@@ -1,15 +1,16 @@
+<!-- 左侧顶部新建聊天组件 -->
 <script setup lang="ts">
 const router = useRouter()
 
-const emit = defineEmits(['clearChatBox'])
+const emit = defineEmits(['clearChatBox','collapseAsideMenu'])
 
 const createNewMsg = ()=>{
   router.push('/')
   emit('clearChatBox')
 }
 
-const toggleMenu = ()=>{
-  console.log(345);
+const collapseAsideMenu = ()=>{
+  emit('collapseAsideMenu')
 }
 </script>
 
@@ -19,7 +20,7 @@ const toggleMenu = ()=>{
       <button class="newchatbtn" @click="createNewMsg">+ New chat</button>
     </el-col>
     <el-col :span="6" class="menu">
-      <icon-svg iconClass="toggle-left" class="menuicon" @click="toggleMenu"></icon-svg>
+      <icon-svg iconClass="toggle-left" class="menuicon" @click="collapseAsideMenu"></icon-svg>
     </el-col>
   </el-row>
 </template>
@@ -74,7 +75,7 @@ const toggleMenu = ()=>{
         @include hoverBackgroundColor;
         outline: none;
       }
-  }
+    }
   }
 }
 

@@ -1,3 +1,4 @@
+<!-- 聊天页面根组件 -->
 <script setup lang="ts">
 import ChatLog from '@/views/chat/chatlog/index.vue'
 import TopButton from '@/views/chat/topbutton/index.vue'
@@ -6,6 +7,7 @@ import ChatBox from '@/views/chat/chatbox/index.vue'
 import '@/icons/js/ChatPageIcon.js'
 import {getUserInfo}from '@/api/user/index'
 import {getUserChatLog} from  "@/api/chat/index";
+import { fa } from 'element-plus/es/locale/index.mjs'
 const route = useRoute()
 
 
@@ -61,22 +63,45 @@ const clearChatBox = ()=>{
 //第一次发送消息后，需要刷新侧边栏，显示最新的Chat Titles
 const refreshChatTitles = async (chatlogID:string)=>{
   await getUserChatTitles(chatlogID)
-  nextTick()
-  await getUserChatTitles(chatlogID)
 }
 
+//是否显示侧边栏
+const isShow = ref<boolean>(true)
+//隐藏侧边栏
+const collapseAsideMenu = ()=>{
+  isShow.value = false
+}
+//显示侧边栏
+const showAsideMenu = ()=>{
+  console.log('show');
+  
+  isShow.value = true
+}
 </script>
 
 <template>
   <div class="container">
-    <div class="aside">
-      <!-- 顶部添加聊天按钮和菜单按钮 -->
-      <top-button class="topbtn" @clear-chat-box="clearChatBox"></top-button>
-      <!-- 聊天历史记录 -->
-      <chat-log ref="chatLogRef" :chat-history="chatHistory" class="chatlog" @chooseChat="chooseChat" @deleteChat="deleteChat"></chat-log>
-      <!-- 底部设置按钮以及账户按钮 -->
-      <set-account :accout-name="accountName" class="account"></set-account>
-    </div>
+    <!-- 左侧侧边栏 -->
+    <!-- 左侧侧边栏隐藏 -->
+    <Transition name="collapse">
+      <div class="aside" v-if="isShow">
+        <!-- 顶部添加聊天按钮和菜单按钮 -->
+        <top-button class="topbtn" @clear-chat-box="clearChatBox" @collapse-aside-menu="collapseAsideMenu"></top-button>
+        <!-- 聊天历史记录 -->
+        <chat-log ref="chatLogRef" :chat-history="chatHistory" class="chatlog" @chooseChat="chooseChat" @deleteChat="deleteChat"></chat-log>
+        <!-- 底部设置按钮以及账户按钮 -->
+        <set-account :accout-name="accountName" class="account"></set-account>
+      </div>
+    </Transition>
+    <!-- 做侧边栏显示 -->
+    <Transition name="show">
+      <!-- 显示左侧侧边栏 -->
+      <div class="menu" v-if="!isShow" @click="showAsideMenu">
+        <icon-svg iconClass="toggle-right" class="menuicon" ></icon-svg>
+      </div>
+    </Transition>
+
+    <!-- 右侧聊天窗口 -->
     <div class="chatbox">
       <chat-box ref="chatBoxRef" @refreshChatTitles="refreshChatTitles"></chat-box>
     </div>
@@ -118,10 +143,10 @@ const refreshChatTitles = async (chatlogID:string)=>{
 @media screen and (min-width: 768px) {
   .container{
     display: flex;
+
     //侧边栏
     .aside{
       @include asideStyle;
-
       .chatlog{
         flex: 1;
         height: 20vh;
@@ -133,11 +158,42 @@ const refreshChatTitles = async (chatlogID:string)=>{
       }
     }
 
+    .menu{
+      position: absolute;
+      z-index: 99;
+      margin-top: 18px;
+      left: 20px;
+      box-sizing: border-box;
+      width: 40px;
+      height: 40px;
+      // background-color: red;
+      border-radius: 6px;
+      .menuicon{
+        box-sizing: border-box;
+        width: 40px;
+        height:40px;
+        padding: 0 10px;
+        font-size: 16px;
+        line-height: 38px;
+        color: rgb(0, 0, 0);
+        border: 1px solid rgba(39, 39, 39, 0.6);
+        border-radius: 6px;
+        &:deep(.icon){
+          margin-bottom: 0px;
+        }
+
+        &:hover{
+          cursor: pointer;
+          @include hoverBackgroundColor;
+          outline: none;
+        }
+      }
+    }
+
     // 对话框
     .chatbox{
       @include chatboxStyle;
       border-radius:  0 10px 10px 0;
-      
       // 大屏时顶部导航栏不出现
       &:deep(.nav){
         display: none;
@@ -148,6 +204,52 @@ const refreshChatTitles = async (chatlogID:string)=>{
         @include msgboxPosition;
       }
     }
+  }
+
+  // 隐藏侧边栏过度动画
+  .collapse-enter-active,.collapse-leave-active {
+    transition: all 0.6s ease-in;
+  }
+  .collapse-enter-from {
+    transform: translateX(-260px);
+  }
+  .collapse-enter-to{
+    transform: translateX(0);
+  }
+  .collapse-leave-from{
+    transform: translateX(0);
+  }
+  .collapse-leave-to{
+    transform: translateX(-260px);
+  }
+
+  // 显示侧边栏过度动画
+  .show-enter-active{
+    animation: enter-in 0.5s ease-in;
+  }
+  @keyframes enter-in {
+    0% {
+      transform: translateX(180px);
+      opacity: 0;
+    }
+    97%{
+      opacity: 0.1;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .show-leave-active {
+    transition: all 0.6s ease-in;
+  }
+  .show-leave-from{
+    transform: translateX(-70px);
+    opacity: 1;
+  }
+  .show-leave-to{
+    transform: translateX(190px);
+    opacity: 0;
   }
 }
 

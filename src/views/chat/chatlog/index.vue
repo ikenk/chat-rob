@@ -1,3 +1,4 @@
+<!-- 左侧中间部分聊天标题组件 -->
 <script setup lang="ts">
 import {renameChatLog,deleteChatLog} from '@/api/chat/index'
 const router = useRouter()
@@ -137,8 +138,6 @@ $margin:10px;
     color: white;
 
     .scroller{
-      // height: ;
-
       .chatlogbox{
         .timelog{
           padding-left: 15px;
@@ -146,7 +145,6 @@ $margin:10px;
           line-height: 15px;
           color: $color-font-aside;
         }
-
 
         .content{
           display: flex;
@@ -224,8 +222,6 @@ $margin:10px;
           }
         }
       }
-
-
     }
     // 警告框样式
     &:deep(.el-overlay){

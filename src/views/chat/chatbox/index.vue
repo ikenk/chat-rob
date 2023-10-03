@@ -1,3 +1,4 @@
+<!-- 右侧聊天对话框组件 -->
 <script setup lang="ts">
 import ChatItem from "./ChatItem.vue";
 import type { ElScrollbar, ElButton } from "element-plus";
