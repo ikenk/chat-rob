@@ -1,17 +1,17 @@
 <!-- 左侧顶部新建聊天组件 -->
 <script setup lang="ts">
-const router = useRouter()
+const router = useRouter();
 
-const emit = defineEmits(['clearChatBox','collapseAsideMenu'])
+const emit = defineEmits(["clearChatBox", "collapseAsideMenu"]);
 
-const createNewMsg = ()=>{
-  router.push('/')
-  emit('clearChatBox')
-}
+const createNewMsg = () => {
+  router.push("/");
+  emit("clearChatBox");
+};
 
-const collapseAsideMenu = ()=>{
-  emit('collapseAsideMenu')
-}
+const collapseAsideMenu = () => {
+  emit("collapseAsideMenu");
+};
 </script>
 
 <template>
@@ -20,20 +20,24 @@ const collapseAsideMenu = ()=>{
       <button class="newchatbtn" @click="createNewMsg">+ New chat</button>
     </el-col>
     <el-col :span="6" class="menu">
-      <icon-svg iconClass="toggle-left" class="menuicon" @click="collapseAsideMenu"></icon-svg>
+      <icon-svg
+        iconClass="toggle-left"
+        class="menuicon"
+        @click="collapseAsideMenu"
+      ></icon-svg>
     </el-col>
   </el-row>
 </template>
 
 <style lang="scss" scoped>
-.topbutton{
+.topbutton {
   height: 60px;
-  padding:8px 0px;
+  padding: 8px 0px;
   // background-color: red;
   border-radius: 5px;
-  .newchat{
+  .newchat {
     height: 50px;
-    .newchatbtn{
+    .newchatbtn {
       box-sizing: border-box;
       padding: 0 10px;
       width: 100%;
@@ -45,8 +49,10 @@ const collapseAsideMenu = ()=>{
       border: 1px solid $color-border-aside;
       @include backgroundColor;
       color: $color-font-aside;
+      overflow: hidden;
+      line-height: 40px;
 
-      &:hover{
+      &:hover {
         @include hoverBackgroundColor;
         outline: none;
         cursor: pointer;
@@ -54,23 +60,23 @@ const collapseAsideMenu = ()=>{
     }
   }
 
-  .menu{
-    padding-left:20px ;
-    .menuicon{
+  .menu {
+    padding-left: 20px;
+    .menuicon {
       box-sizing: border-box;
       width: 40px;
-      height:40px;
+      height: 40px;
       padding: 0 10px;
       font-size: 16px;
       line-height: 38px;
-      color: rgba(255,255,255,0.6);
+      color: rgba(255, 255, 255, 0.6);
       border: 1px solid $color-border-aside;
       border-radius: 6px;
-      &:deep(.icon){
+      &:deep(.icon) {
         margin-bottom: 0px;
       }
 
-      &:hover{
+      &:hover {
         cursor: pointer;
         @include hoverBackgroundColor;
         outline: none;

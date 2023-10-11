@@ -1,6 +1,5 @@
 index.html
 
-
 *.sh
 *.md
 *.woff
@@ -15,3 +14,6 @@ Dockerfile
 /public
 /docs
 /bin
+.eslintrc.js
+prettier.config.js
+/src/mock/*

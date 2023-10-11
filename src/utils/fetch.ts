@@ -47,7 +47,6 @@
 //   controller.abort()
 // }
 
-
 // const res = await fetch("http://192.168.3.59:7010/chat", {
 //       method: "POST",
 //       headers: {
@@ -55,19 +54,21 @@
 //       },
 //       body: JSON.stringify(userMsg.value)
 // });
-const baseURL = import.meta.env.VITE_APP_BASE_API
+const baseURL = import.meta.env.VITE_APP_BASE_API;
+
+type Method = "GET" | "POST" | "PUT" | "DELETE";
 
 export const fetchUtil = (
   url: string,
-  method: string,
-  headers?:HeadersInit,
-  body?:BodyInit,
+  method: Method,
+  headers?: HeadersInit,
   signal?: AbortSignal, // 请求中止标识
-)=>{
-  return fetch(`${baseURL}${url}`,{
-      method,
-      signal,
-      headers,
-      body
-    })
-}
+  body?: BodyInit,
+) => {
+  return fetch(`${baseURL}${url}`, {
+    method,
+    signal,
+    headers,
+    body,
+  });
+};

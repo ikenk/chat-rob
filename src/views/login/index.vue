@@ -3,7 +3,8 @@ import type { FormInstance, FormRules } from "element-plus";
 import { ElMessage } from "element-plus";
 import { getLogin } from "@/api/login/index.ts";
 import { getRegister } from "@/api/register/index.ts";
-import {useUserInfoStore}from '@/stores/userInfo'
+import { useUserInfoStore } from "@/stores/userInfo";
+import type { RegisterInfo, LoginInfo } from "@/types/userInfo";
 
 const router = useRouter();
 const store = useUserInfoStore();
@@ -18,7 +19,6 @@ const isShow = ref<string>("login");
  * @param callback
  */
 // 账号校验规则
-// @ts-ignore
 const validateAccount = (rule: any, value: any, callback: any) => {
   if (!value) {
     return callback(new Error("请输入账号"));
@@ -38,7 +38,6 @@ const validateAccount = (rule: any, value: any, callback: any) => {
   callback();
 };
 // 密码校验规则
-// @ts-ignore
 const validatePassword = (rule: any, value: any, callback: any) => {
   if (value === "") {
     callback(new Error("请输入密码"));
@@ -56,7 +55,6 @@ const validatePassword = (rule: any, value: any, callback: any) => {
   }
 };
 // 再次确认密码校验
-// @ts-ignore
 const validatePassAgain = (rule: any, value: any, callback: any) => {
   if (value === "") {
     callback(new Error("请再次输入密码"));
@@ -122,7 +120,7 @@ const submitLoginForm = (formEl: FormInstance | undefined) => {
     if (valid) {
       const res = await getLogin(loginForm.value);
       ElMessage.success(res.message);
-      store.setToken('user-token',res.data!.token);
+      store.setToken("user-token", res.data!.token);
       formEl.resetFields();
       router.replace("/");
     } else {
@@ -161,11 +159,11 @@ const resetForm = (formEl: FormInstance | undefined) => {
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitLoginForm(loginFormRef)"
-          >登入</el-button
-        >
-        <el-button @click="resetForm(loginFormRef)">重置</el-button>
-        <el-button @click="isShow = 'register'">>>注册</el-button>
+        <el-button type="primary" @click="submitLoginForm(loginFormRef)">
+          登入
+        </el-button>
+        <el-button @click="resetForm(loginFormRef)"> 重置 </el-button>
+        <el-button @click="isShow = 'register'"> >>注册 </el-button>
       </el-form-item>
     </el-form>
     <el-form
@@ -195,11 +193,11 @@ const resetForm = (formEl: FormInstance | undefined) => {
         <el-input v-model.number="registerForm.checkpass" type="password" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitRegisterForm(registerFormRef)"
-          >注册</el-button
-        >
-        <el-button @click="resetForm(registerFormRef)">重置</el-button>
-        <el-button @click="isShow = 'login'">>>登陆</el-button>
+        <el-button type="primary" @click="submitRegisterForm(registerFormRef)">
+          注册
+        </el-button>
+        <el-button @click="resetForm(registerFormRef)"> 重置 </el-button>
+        <el-button @click="isShow = 'login'"> >>登陆 </el-button>
       </el-form-item>
     </el-form>
   </div>

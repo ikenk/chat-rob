@@ -33,6 +33,6 @@
       // "vue-router"
     ]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue","src/**/**/*.vue"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue","src/**/**/*.vue","src/types/auto-imports.d.ts","src/types/components.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

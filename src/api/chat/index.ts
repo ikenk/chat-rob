@@ -1,50 +1,45 @@
-import {request} from '@/utils/http'
+import { request } from "@/utils/http";
+import type { ChatHistory } from "@/types/chatHistory";
+import type { DialogList } from "@/types/userMsg";
 
 /**
  * 接收新对话的uuid
  */
-export const getUUID = (url:string)=>{
-  return request<{chatID:string}>(
-    `/chat/uuid/${url}`,
-    'GET'
-  )
-}
+export const getUUID = (url: string) => {
+  return request<{ chatID: string }>(`/chat/uuid/${url}`, "GET");
+};
 
 /**
  * 根据地址里的对话id，向后台请求用户对话 具体内容
  */
-export const getUserChat = (id:string)=>{
+export const getUserChat = (id: string) => {
   return request<{
-    chatlog:DialogList
-    chatlogID:string
-    _id:string
-  }>(
-    `/chat/content/${id}`,
-    'GET'
-  )
-}
+    chatlog: DialogList;
+    chatlogID: string;
+    _id: string;
+  }>(`/chat/content/${id}`, "GET");
+};
 
 /**
  * 每次进入chat组件时，向后台获取用户 对话记录
  */
-export const getUserChatLog = (url:string)=>{
-  return request<ChatHistory>(`/chat/titles/${url}`,'GET')
-}
+export const getUserChatLog = (url: string) => {
+  return request<ChatHistory>(`/chat/titles/${url}`, "GET");
+};
 
 /**
  * 修改对话名字
  */
-export const renameChatLog = (url:string,data:Object)=>{
-  return request<Object>(`/chat/titles/${url}`,'POST',data)
-}
+export const renameChatLog = (url: string, data: object) => {
+  return request<object>(`/chat/titles/${url}`, "POST", data);
+};
 
 /**
  * 删除对话
  */
-export const deleteChatLog = (url:string)=>{
-  return request<Object>(`/chat/titles/${url}`,'DELETE')
-}
-
+export const deleteChatLog = (url: string) => {
+  return request<object>(`/chat/titles/${url}`, "DELETE");
+};
 
 // export const request = <T>(
 //   url:string,
