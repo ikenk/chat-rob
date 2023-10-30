@@ -17,3 +17,4 @@ Dockerfile
 .eslintrc.js
 prettier.config.js
 /src/mock/*
+# *.scss

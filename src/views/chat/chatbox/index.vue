@@ -10,7 +10,7 @@ import type {
   DialogList,
   DialogMsg,
 } from "@/types/userMsg.d.ts";
-import SparkMD5 from "spark-md5";
+// import SparkMD5 from "spark-md5";
 const store = useUserInfoStore();
 const router = useRouter();
 const route = useRoute();
@@ -69,6 +69,8 @@ let controller: AbortController;
 //向后台发送消息函数
 const sendMsgToBack = async () => {
   if (msg.value) {
+    console.log(msg.value);
+
     isShowAbortBtn.value = true; //显示中断按钮
     // console.log(msg.value);
     userMsg.value = {
@@ -192,6 +194,30 @@ const sendMsgBtn = () => {
   sendMsgToBack();
 };
 
+// 定义一个输入法标志变量
+const isComposing = ref<boolean>(false);
+//获取input输入框，监听输入法输入事件
+const msgInput = ref();
+onMounted(() => {
+  // 监听compositionstart事件 开始输入
+  (msgInput.value.ref as HTMLTextAreaElement).addEventListener(
+    "compositionstart",
+    () => {
+      // 设置标志变量为true
+      isComposing.value = true;
+      console.log("true");
+    },
+  );
+  // 监听compositionend事件 结束输入
+  (msgInput.value.ref as HTMLTextAreaElement).addEventListener(
+    "compositionend",
+    () => {
+      // 设置标志变量为false
+      isComposing.value = false;
+      console.log("false");
+    },
+  );
+});
 //键盘enter键发送消息
 const sendmsgKey = (evt: KeyboardEvent | Event) => {
   if (evt instanceof KeyboardEvent) {
@@ -201,7 +227,9 @@ const sendmsgKey = (evt: KeyboardEvent | Event) => {
       evt.stopPropagation(); //Firefox阻止冒泡行为
       evt.preventDefault(); //取消事件的默认动作*换行
       //向后台发送消息
-      sendMsgToBack();
+      if (!isComposing.value) {
+        sendMsgToBack();
+      }
     }
   }
 };
@@ -235,43 +263,47 @@ const abortmsgBtn = async () => {
 //获取input元素
 const uploadFile = ref<HTMLInputElement>();
 //设置分片大小
-const CHUNK_SIZE = 1024;
+const CHUNK_SIZE = 4096;
 //文件的hash值
-const fileHash = ref<string>("");
+// const fileHash = ref<string>("");
 //文件名字
 const fileName = ref<string>("");
 //文件上传百分比
 const percentage = ref<string>();
+//onMounted给input标签添加change事件
 onMounted(() => {
   //给input元素添加change事件
   uploadFile.value!.addEventListener("change", handler);
 });
+
 //input元素change事件的callback函数
-const handler = async (e: Event) => {
-  const files = (e.target as HTMLInputElement).files;
-  if (!files || files?.length <= 0) {
-    return;
-  }
-  // console.log(files);
-  //设置文件名字
-  fileName.value = files[0].name;
-  // console.log(fileName.value);
-  //预览图片
-  previewPic(files[0]);
-  //图片切片并返回切片数组
-  const fileChunkList = createFileChunks(files[0], CHUNK_SIZE);
-  // console.log(fileChunkList);
-  //将文件切片数组做信息摘要
-  fileHash.value = (await calculateHash(fileChunkList, CHUNK_SIZE)) as string;
-  // console.log(fileHash.value);
-  await uploadChunks(fileChunkList, fileHash.value, fileName.value);
-  uploadImgUrl.value = "";
-  // e.target.value = "";
-};
-//添加点击事件
-const sendFileBtn = () => {
-  uploadFile.value!.click();
-};
+// const handler = async (e: Event) => {
+//   const files = (e.target as HTMLInputElement).files;
+//   if (!files || files?.length <= 0) {
+//     return;
+//   }
+//   // console.log(files);
+//   //设置文件名字
+//   fileName.value = files[0].name;
+//   // console.log(fileName.value);
+//   //预览图片
+//   previewPic(files[0]);
+//   //图片切片并返回切片数组
+//   const fileChunkList = createFileChunks(files[0], CHUNK_SIZE);
+//   // console.log(fileChunkList);
+//   //将文件切片数组做信息摘要
+//   fileHash.value = (await calculateHash(fileChunkList, CHUNK_SIZE)) as string;
+//   // console.log(fileHash.value);
+//   //上传文件分片
+//   await uploadChunks(fileChunkList, fileHash.value, fileName.value);
+//   //图片上传成功后，将图片区域的url改为空
+//   uploadImgUrl.value = "";
+//   //将input标签内的file清空，以免用户上传相同文件时出现无法触发change事件的问题
+//   (e.target as HTMLInputElement).value = "";
+//   //等待上传完后向服务器发送合并请求
+//   const res = await mergeRequest();
+//   console.log(res);
+// };
 
 //图片预览URL
 const uploadImgUrl = ref<string>();
@@ -280,125 +312,198 @@ const previewPic = (file: Blob) => {
   const reader = new FileReader();
   reader.readAsDataURL(file);
   reader.onload = (e: Event) => {
-    uploadImgUrl.value = e.target.result;
+    uploadImgUrl.value = (e.target as FileReader).result as string;
   };
 };
 
 //对文件进行分片处理
-const createFileChunks = (file: Blob, chunkSize: number) => {
-  const fileChunkList = [];
-  let curSize = 0; //当前起点
-  while (curSize < file.size) {
-    fileChunkList.push({
-      file: file.slice(curSize, curSize + chunkSize),
-    });
-    curSize = curSize + chunkSize;
-  }
-  return fileChunkList;
-};
+// const createFileChunks = (file: Blob, chunkSize: number) => {
+//   const fileChunkList = [];
+//   let curSize = 0; //当前起点
+//   while (curSize < file.size) {
+//     fileChunkList.push({
+//       file: file.slice(curSize, curSize + chunkSize),
+//     });
+//     curSize = curSize + chunkSize;
+//   }
+//   return fileChunkList;
+// };
 
 //计算文件分片的hash值,
 // 第一个和最后一个切片的内容全部参与计算,
 // 中间剩余的切片我们分别在前面、后面和中间取2个字节参与计算
-const calculateHash = (
-  fileChunkList: Array<{ file: Blob }>,
-  chunkSize: number,
-) => {
-  return new Promise((resolve) => {
-    const spark = new SparkMD5.ArrayBuffer();
-    const chunksForHash: Blob[] = []; //存放需要进行信息摘要的文本
+// const calculateHash = (
+//   fileChunkList: Array<{ file: Blob }>,
+//   chunkSize: number,
+// ) => {
+//   return new Promise((resolve) => {
+//     const spark = new SparkMD5.ArrayBuffer();
+//     const chunksForHash: Blob[] = []; //存放需要进行信息摘要的文本
 
-    fileChunkList.forEach((chunk, index, array) => {
-      if (index === 0 || index === array.length - 1) {
-        // 第一个和最后一个切片的内容全部参与计算
-        chunksForHash.push(chunk.file);
-      } else {
-        // 中间剩余的切片我们分别在前面、后面和中间取2个字节参与计算
-        // 前面的2字节
-        chunksForHash.push(chunk.file.slice(0, 2));
-        // 中间的2字节
-        chunksForHash.push(chunk.file.slice(chunkSize / 2, chunkSize / 2 + 2));
-        // 后面的2字节
-        chunksForHash.push(chunk.file.slice(chunkSize - 2, chunkSize));
-      }
-    });
-    // console.log(chunks);
-    // console.log(new Blob(chunks));
-    const reader = new FileReader();
-    reader.readAsArrayBuffer(new Blob(chunksForHash));
-    reader.onload = (e: Event) => {
-      spark.append(e?.target?.result as ArrayBuffer);
-      resolve(spark.end());
-    };
-  });
-};
+//     fileChunkList.forEach((chunk, index, array) => {
+//       if (index === 0 || index === array.length - 1) {
+//         // 第一个和最后一个切片的内容全部参与计算
+//         chunksForHash.push(chunk.file);
+//       } else {
+//         // 中间剩余的切片我们分别在前面、后面和中间取2个字节参与计算
+//         // 前面的2字节
+//         chunksForHash.push(chunk.file.slice(0, 2));
+//         // 中间的2字节
+//         chunksForHash.push(chunk.file.slice(chunkSize / 2, chunkSize / 2 + 2));
+//         // 后面的2字节
+//         chunksForHash.push(chunk.file.slice(chunkSize - 2, chunkSize));
+//       }
+//     });
+//     // console.log(chunks);
+//     // console.log(new Blob(chunks));
+//     const reader = new FileReader();
+//     reader.readAsArrayBuffer(new Blob(chunksForHash));
+//     reader.onload = (e: Event) => {
+//       spark.append(e?.target?.result as ArrayBuffer);
+//       resolve(spark.end());
+//     };
+//   });
+// };
 
 //上传切片文件
-const uploadChunks = async (
-  fileChunkList: Array<{ file: Blob }>,
-  fileHash: string,
-  fileName: string,
-) => {
-  //对文件切片做标记，以便后端的文件合成
-  const data = fileChunkList.map(({ file }, index) => {
-    return {
-      fileHash,
-      index,
-      chunk: file,
-      chunkHash: `${fileHash}-${index}`,
-      size: file.size,
-    };
-  });
+// const uploadChunks = async (
+//   fileChunkList: Array<{ file: Blob }>,
+//   fileHash: string,
+//   fileName: string,
+// ) => {
+//   //对文件切片做标记，以便后端的文件合成
+//   const data = fileChunkList.map(({ file }, index) => {
+//     return {
+//       fileHash,
+//       index,
+//       chunk: file,
+//       chunkHash: `${fileHash}-${index}`,
+//       size: file.size,
+//     };
+//   });
 
-  // console.log(data);
+//   // console.log(data);
 
-  //做formdata数组
-  const formDatas = data.map(({ chunk, chunkHash }) => {
-    const formData = new FormData();
-    // 添加切片文件
-    formData.append("chunk", chunk);
-    // 添加切片文件的切片hash值
-    formData.append("chunkHash", chunkHash);
-    //添加切片文件名称
-    formData.append("fileName", fileName);
-    //添加切片文件的hash值
-    formData.append("fileHash", fileHash);
-    return formData;
-  });
+//   //做formdata数组
+//   const formDatas = data.map(({ chunk, chunkHash }) => {
+//     const formData = new FormData();
+//     // 添加切片文件
+//     formData.append("chunk", chunk);
+//     // 添加切片文件的切片hash值
+//     formData.append("chunkHash", chunkHash);
+//     //添加切片文件名称
+//     formData.append("fileName", fileName);
+//     //添加切片文件的hash值
+//     formData.append("fileHash", fileHash);
+//     return formData;
+//   });
 
-  console.log(formDatas);
+//   console.log(formDatas);
 
-  //浏览器并发请求
-  let index = 0;
-  const concurrentMax = 6; // 并发请求数量
-  const taskPool: any = [];
+//   //浏览器并发请求
+//   let index = 0;
+//   const concurrentMax = 6; // 并发请求数量
+//   const taskPool: any = [];
 
-  while (index < formDatas.length) {
-    const task = fetchUtil(
-      "/upload",
-      "POST",
-      {
-        Authorization: `Bearer ${store.getToken("user-token")}`,
-      },
-      undefined,
-      formDatas[index],
-    );
-    task.then(() => {
-      taskPool.splice(
-        taskPool.findIndex((item: any) => item === task),
-        1,
-      );
-    });
-    taskPool.push(task);
-    if (taskPool.length === concurrentMax) {
-      await Promise.race(taskPool);
-      index++;
-      percentage.value = ((index / formDatas.length) * 100).toFixed(0);
-      // console.log(index);
-      // console.log(percentage.value);
-    }
+//   while (index < formDatas.length) {
+//     const task = fetchUtil(
+//       "/upload",
+//       "POST",
+//       {
+//         Authorization: `Bearer ${store.getToken("user-token")}`,
+//       },
+//       undefined,
+//       formDatas[index],
+//     );
+//     task.then(() => {
+//       taskPool.splice(
+//         taskPool.findIndex((item: any) => item === task),
+//         1,
+//       );
+//     });
+//     taskPool.push(task);
+//     if (taskPool.length === concurrentMax) {
+//       await Promise.race(taskPool);
+//       index++;
+//       percentage.value = ((index / formDatas.length) * 100).toFixed(0);
+//       // console.log(index);
+//       // console.log(percentage.value);
+//     }
+//   }
+//   await Promise.all(taskPool);
+// };
+
+/**
+ * 发请求通知服务器，合并切片
+ */
+// const mergeRequest = () => {
+//   return fetchUtil(
+//     "/upload/merge",
+//     "POST",
+//     {
+//       "Content-Type": "application/json",
+//       Authorization: `Bearer ${store.getToken("user-token")}`,
+//     },
+//     undefined,
+//     JSON.stringify({
+//       size: CHUNK_SIZE,
+//       fileHash: fileHash.value,
+//       fileName: fileName.value,
+//     }),
+//   );
+// };
+
+//引入worker模块
+import chatboxWorker from "@/views/chat/chatbox/chatboxWork.ts?worker";
+//input元素change事件的callback函数
+const handler = async (e: Event) => {
+  const files = (e.target as HTMLInputElement).files;
+  if (!files || files?.length <= 0) {
+    return;
   }
-  await Promise.all(taskPool);
+  //设置文件名字
+  fileName.value = files[0].name;
+  //预览图片
+  previewPic(files[0]);
+  // 创建一个worker线程
+  const chatWorker = new chatboxWorker();
+  //向线程传递参数
+  chatWorker.postMessage({
+    file: files[0],
+    CHUNK_SIZE,
+    token: store.getToken("user-token"),
+  });
+  //接收线程参数
+  chatWorker.onmessage = function (e: MessageEvent) {
+    // console.log(e);
+    percentage.value = e.data.percentage;
+    console.log(percentage.value);
+    if (percentage.value?.slice(0, 3) === "100") {
+      //图片上传成功后，将图片区域的url改为空
+      uploadImgUrl.value = "";
+    }
+  };
+  //线程报错处理
+  chatWorker.onerror = function (event) {
+    // console.log(event);
+    console.log(
+      [
+        "ERROR: Line ",
+        event.lineno,
+        " in ",
+        event.filename,
+        ": ",
+        event.message,
+      ].join(""),
+    );
+  };
+  //将input标签内的file清空，以免用户上传相同文件时出现无法触发change事件的问题
+  (e.target as HTMLInputElement).value = "";
+};
+
+//添加点击事件
+const sendFileBtn = () => {
+  uploadFile.value!.click();
 };
 </script>
 
@@ -429,6 +534,7 @@ const uploadChunks = async (
         </div>
       </div>
       <el-input
+        ref="msgInput"
         v-model="msg"
         class="sendmsg"
         maxlength="1000"

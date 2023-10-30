@@ -1,6 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useUserInfoStore } from "@/stores/userInfo";
-
+import { gsapRoutes } from "./test/gsap";
+import { canvasRoutes } from "./test/canvas";
+import { chatRoutes } from "./chat";
+import { trimPicRoutes } from "./test/trimPic";
+import { mantianxingRoutes } from "./test/mantianxing";
 //静态路由
 const constRoutes = [
   {
@@ -9,25 +13,11 @@ const constRoutes = [
     name: "root",
     meta: {},
   },
-  //聊天界面路由
-  {
-    path: "/chat/:params",
-    name: "chat",
-    component: () => import("@/views/chat/index.vue"),
-    meta: {},
-  },
-  //登陆界面路由
-  {
-    path: "/login",
-    name: "login",
-    component: () => import("@/views/login/index.vue"),
-    meta: {},
-  },
-  {
-    path: "/test",
-    name: "test",
-    component: () => import("@/views/test/test.vue"),
-  },
+  ...chatRoutes,
+  ...canvasRoutes,
+  ...gsapRoutes,
+  ...trimPicRoutes,
+  ...mantianxingRoutes,
   //404路由
   {
     path: "/:pathMatch(.*)",

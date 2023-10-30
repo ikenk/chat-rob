@@ -29,6 +29,7 @@ export default defineConfig({
         additionalData: `@use "@/styles/element/index.scss" as *;
         @use "@/styles/mixin.scss" as *;
         @use "@/styles/variable.scss" as *;
+        @use "@/styles/font.scss" as *;
         `,
       },
     },

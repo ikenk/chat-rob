@@ -1,0 +1,39 @@
+/* 定义一个名为 MyFont 的字体 */
+@font-face{
+  /* 设置字体的名称 */
+  font-family:"notoserif";
+  /* 设置字体的源文件 */
+  src:url("@/src/assets/fonts/NotoSerifCJKjp-Regular.woff")format('woff');
+}
+@font-face{
+  /* 设置字体的名称 */
+  font-family:"EBGaramond-Regular";
+  /* 设置字体的源文件 */
+  src:url("@/src/assets/fonts/EBGaramond-Regular.woff")format('woff');
+}
+@font-face{
+  /* 设置字体的名称 */
+  font-family:"EBGaramond-Medium";
+  /* 设置字体的源文件 */
+  src:url("@/src/assets/fonts/EBGaramond-Medium.woff")format('woff');
+}
+
+//辉光管字体
+@font-face{
+  /* 设置字体的名称 */
+  font-family:"BONX-Frame";
+  /* 设置字体的源文件 */
+  src:url("@/src/assets/fonts/BONX-Frame.otf")format('opentype');
+}
+@font-face{
+  /* 设置字体的名称 */
+  font-family:"BONX-Silhouette";
+  /* 设置字体的源文件 */
+  src:url("@/src/assets/fonts/BONX-Silhouette.otf")format('opentype');
+}
+@font-face{
+  /* 设置字体的名称 */
+  font-family:"BONX-Number";
+  /* 设置字体的源文件 */
+  src:url("@/src/assets/fonts/BONX-Medium.otf")format('opentype');
+}    
